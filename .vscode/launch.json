@@ -17,7 +17,7 @@
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ],
-            "args": [ "D:\\_Documents\\test", "dupa"]
+            "args": [ "D:\\_Documents\\test" ]
         }
     ]
 }
