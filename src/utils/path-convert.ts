@@ -6,3 +6,11 @@ export function changeFilePathExtension (filePath: string, extension: string): s
     const newFilePath: string = pth.format(filePathObject)
     return newFilePath
 } 
+
+export function getFilePaths (directory: string, fileNames: string []): string[] {
+    let filesPaths: string [] = []
+    fileNames.forEach((fileName): void => {
+        filesPaths.push(pth.join(directory, fileName))
+    })
+    return filesPaths
+}
