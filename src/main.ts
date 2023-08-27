@@ -10,36 +10,34 @@ if (numArgs != 3) {
     process.exit()
 }
 
+interface File {
+    path: string
+    data: Buffer
+}
+
 const path: string = args[2]
+let filePaths: string[] = []
+let files: File[] = []
 
-fs.readdir(path, readAllFilesInDirecotry(path))
+fs.readdir(path, convertFiles)
 
-function readAllFilesInDirecotry (path: string): (err: NodeJS.ErrnoException | null, files: string[]) => void {
-    return (err, files) => {
-        if(err) {
-            console.log(err)
-            return
-        }
-        for(let i: number = 0; i < files.length; i++) {
-            const filePath: string = pth.join(path, files[i])
-            fs.readFile(filePath, saveFileData(pc.changeFilePathExtension(filePath, ".txt")))
-        }
-    }
+function convertFiles (err: NodeJS.ErrnoException | null, fileNames: string[]): void {
+    filePaths = pc.getFilePaths(path, fileNames)
+    readFiles(filePaths, onReadFile)
 }
 
-function saveFileData (filePath: string): (err: NodeJS.ErrnoException | null, data: Buffer) => void {
-    return (err, data) => {
-        if(err) {
-            console.log(err)
-            return
-        }
-        fs.writeFile(filePath, data, handleError)
-    }
+function saveFileDataToArray (file: File, files: File[]) {
+    files.push(file)
 }
 
-function handleError (err: NodeJS.ErrnoException | null): void {
-    if (err) {
-        console.log(err)
-        return
-    }
+function readFiles (filesPaths: string[], operation: (err: NodeJS.ErrnoException | null, data: Buffer) => void): void {
+    filesPaths.forEach((filePath: string): void => {
+        fs.readFile(filePath, operation)
+    })
+}
+
+function writeFiles (files: file[], operation: (err: NodeJS.ErrnoException | null) => void): void {
+    files.forEach((file) => {
+        fs.writeFile(file.filePath, file.data, operation)
+    })
 }
